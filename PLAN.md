@@ -3,7 +3,15 @@
 Personal portfolio for Zackary Blaylock, published with GitHub Pages at
 `https://zackaryb1993.github.io`. Content comes from "The One Resume" (Google Doc).
 
-Status: **Phases 0–2 done** (scaffold, design system, content and static sections). Next: Phase 3, hero decrypt effect and the shared Three.js renderer.
+Status: **Phases 0–4 done** (scaffold, design system, content, hero decrypt + particle
+network, seven interactive 3D flow scenes with legends and fallbacks). Next: Phase 5,
+timeline, skills, and contact animations.
+
+Flow scenes: `src/data/flows.ts` holds the nodes, edges, routes, and hover blurbs for every
+case study; `src/scenes/` holds the shared Three.js stage (`stage.ts`), the scene class
+(`flow.ts`), the hero (`hero.ts`), and the decrypt effect. Desktop gets 3D; touch and
+narrow screens get the SVG fallback; reduced motion gets no animation at all. Scene colors
+are read from the theme CSS variables at runtime.
 
 ## Decisions so far
 
