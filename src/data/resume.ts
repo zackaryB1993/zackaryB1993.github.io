@@ -213,7 +213,7 @@ export const experience = [
 ];
 
 export const skills: { group: string; items: string[] }[] = [
-  { group: 'Languages', items: ['TypeScript', 'JavaScript', 'Java', 'Rust', 'SQL', 'Bash'] },
+  { group: 'Languages', items: ['TypeScript', 'JavaScript', 'Java', 'Python', 'Rust', 'SQL', 'Bash'] },
   { group: 'Frontend', items: ['React', 'Next.js', 'Angular', 'Vue', 'Redux', 'Tailwind CSS', 'SASS', 'Astro', 'WCAG accessibility'] },
   { group: 'Mobile & Desktop', items: ['React Native (Expo)', 'Tauri'] },
   { group: 'Backend', items: ['Node.js', 'Spring Boot', 'Spring Security', 'Spring Data JPA', 'Hibernate', 'Koa', 'Axum (Rust)', 'Prisma'] },
