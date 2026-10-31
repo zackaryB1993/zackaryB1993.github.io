@@ -1,0 +1,213 @@
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/jetbrains-mono';
+@import '@fontsource-variable/comfortaa';
+@import './theme.css';
+@import 'tailwindcss';
+
+/*
+ * Design tokens. Colors come from theme.css; nothing below holds a hex value.
+ * Tailwind exposes these as utilities: bg-bg, bg-card, text-ink, text-accent-glow, border-line, etc.
+ */
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Comfortaa Variable', 'Inter Variable', ui-sans-serif, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+
+  --color-bg: var(--background);
+  --color-dock: var(--surface-dock);
+  --color-card: var(--surface-card);
+  --color-hover: var(--surface-hover);
+
+  --color-accent: var(--accent-primary);
+  --color-accent-glow: var(--accent-glow);
+  --color-link: var(--accent-link);
+
+  --color-ink: var(--text-heading);
+  --color-ink-muted: var(--text-muted);
+
+  --color-line: color-mix(in srgb, var(--text-heading) 8%, transparent);
+  --color-line-strong: color-mix(in srgb, var(--text-heading) 14%, transparent);
+
+  --shadow-glow: 0 0 24px color-mix(in srgb, var(--accent-glow) 35%, transparent),
+    0 0 2px color-mix(in srgb, var(--accent-glow) 60%, transparent);
+  --shadow-glow-link: 0 0 24px color-mix(in srgb, var(--accent-link) 35%, transparent);
+  --shadow-card: 0 1px 0 color-mix(in srgb, var(--text-heading) 4%, transparent) inset,
+    0 12px 32px color-mix(in srgb, var(--background) 70%, black);
+}
+
+html {
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  scroll-behavior: smooth;
+}
+
+/*
+ * Page background: a faint grid plus a wash of the glow color at the top-left so the
+ * theme shows through. The grid is intentionally quiet; the cursor spotlight (below)
+ * is what makes it visible.
+ */
+:root {
+  --grid-size: 64px;
+  --grid-line: color-mix(in srgb, var(--text-heading) 3.5%, transparent);
+  /* Cursor position for the spotlight, updated by the script in Layout.astro. */
+  --mx: -1000px;
+  --my: -1000px;
+}
+
+body {
+  background-image:
+    radial-gradient(ellipse 55% 45% at 12% 0%, color-mix(in srgb, var(--accent-glow) 16%, transparent), transparent 70%),
+    radial-gradient(ellipse 45% 40% at 92% 100%, color-mix(in srgb, var(--accent-glow) 12%, transparent), transparent 70%),
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, var(--grid-size) var(--grid-size), var(--grid-size) var(--grid-size);
+  background-attachment: fixed;
+}
+
+/*
+ * Cursor spotlight. A fixed layer that redraws the grid in the link color and a soft
+ * glow, masked to a circle around the cursor. Pointer-events off so it never blocks
+ * clicks. Hidden on touch devices and under reduced motion.
+ */
+.bg-spotlight {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(260px circle at var(--mx) var(--my), color-mix(in srgb, var(--accent-link) 18%, transparent), transparent 70%),
+    linear-gradient(color-mix(in srgb, var(--accent-link) 55%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--accent-link) 55%, transparent) 1px, transparent 1px);
+  background-size: 100% 100%, var(--grid-size) var(--grid-size), var(--grid-size) var(--grid-size);
+  -webkit-mask-image: radial-gradient(320px circle at var(--mx) var(--my), #000 0%, rgb(0 0 0 / 0.5) 40%, transparent 72%);
+  mask-image: radial-gradient(320px circle at var(--mx) var(--my), #000 0%, rgb(0 0 0 / 0.5) 40%, transparent 72%);
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+.bg-spotlight.is-active {
+  opacity: 1;
+}
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .bg-spotlight { display: none; }
+}
+
+/* Page content sits above the spotlight layer. */
+body > main, body > header, body > footer {
+  position: relative;
+  z-index: 1;
+}
+
+@layer components {
+  .display {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+
+  /* Glass panel: translucent surface with a thin highlight edge. */
+  .glass {
+    background: color-mix(in srgb, var(--color-card) 82%, transparent);
+    border: 1px solid var(--color-line);
+    box-shadow: var(--shadow-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 1rem;
+  }
+  .glass:hover {
+    border-color: var(--color-line-strong);
+  }
+
+  /* Gradient edge (glow → link) used on the featured card and active states. */
+  .edge-glow {
+    position: relative;
+  }
+  .edge-glow::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--accent-glow) 70%, transparent),
+      color-mix(in srgb, var(--accent-link) 45%, transparent) 60%,
+      transparent
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 0.75rem;
+    padding: 0.7rem 1.1rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: transform 150ms ease, box-shadow 150ms ease, background-color 150ms ease, border-color 150ms ease;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary {
+    background: var(--color-accent);
+    color: var(--color-ink);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-glow) 35%, transparent) inset;
+  }
+  .btn-primary:hover {
+    background: color-mix(in srgb, var(--accent-primary) 85%, var(--accent-glow));
+    box-shadow: var(--shadow-glow);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--color-ink);
+    border: 1px solid var(--color-line-strong);
+  }
+  .btn-ghost:hover {
+    background: var(--color-hover);
+    border-color: color-mix(in srgb, var(--text-heading) 22%, transparent);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 0.25rem 0.65rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-ink-muted);
+    background: var(--color-dock);
+    border: 1px solid var(--color-line);
+  }
+
+  .status-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--color-accent-glow);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--accent-glow) 90%, transparent);
+  }
+
+  .text-glow {
+    text-shadow: 0 0 18px color-mix(in srgb, var(--accent-glow) 45%, transparent);
+  }
+
+  .link {
+    color: var(--color-link);
+    text-decoration: none;
+  }
+  .link:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

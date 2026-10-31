@@ -1,0 +1,66 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Zackary Blaylock | Senior Lead Software Engineer',
+  description = 'Senior lead software engineer building secure, cloud-native systems on AWS.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body class="min-h-screen antialiased">
+    <div class="bg-spotlight" aria-hidden="true"></div>
+    <slot />
+
+    <script>
+      // Cursor spotlight: track the pointer and expose it as CSS variables.
+      // Throttled to one update per animation frame. Fades out when the cursor leaves.
+      const layer = document.querySelector<HTMLElement>('.bg-spotlight');
+      const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (layer && fine && !reduce) {
+        const root = document.documentElement;
+        let x = 0;
+        let y = 0;
+        let queued = false;
+
+        const apply = () => {
+          root.style.setProperty('--mx', `${x}px`);
+          root.style.setProperty('--my', `${y}px`);
+          queued = false;
+        };
+
+        window.addEventListener(
+          'pointermove',
+          (e) => {
+            x = e.clientX;
+            y = e.clientY;
+            layer.classList.add('is-active');
+            if (!queued) {
+              queued = true;
+              requestAnimationFrame(apply);
+            }
+          },
+          { passive: true },
+        );
+
+        document.addEventListener('pointerleave', () => layer.classList.remove('is-active'));
+        window.addEventListener('blur', () => layer.classList.remove('is-active'));
+      }
+    </script>
+  </body>
+</html>

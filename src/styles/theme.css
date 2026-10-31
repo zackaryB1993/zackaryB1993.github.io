@@ -1,0 +1,22 @@
+/*
+ * Palette. This is the only file that holds color values.
+ *
+ * To change the theme, replace the nine values below. Everything else in the site
+ * (borders, glows, hover states, gradients) is derived from these with color-mix().
+ * Keys match the JSON format used to hand over a palette:
+ *   background, surface-dock, surface-card, surface-hover,
+ *   accent-primary, accent-glow, accent-link, text-heading, text-muted
+ */
+:root {
+  --background: #111214;     /* page base */
+  --surface-dock: #1e1f22;   /* nav rail, chips */
+  --surface-card: #1a1b1e;   /* cards and panels */
+  --surface-hover: #2b2d31;  /* hover state for tiles and list rows */
+
+  --accent-primary: #107c11; /* primary buttons and active states */
+  --accent-glow: #26e629;    /* glows, status dots, highlighted text */
+  --accent-link: #5865f2;    /* links and secondary accent */
+
+  --text-heading: #f5f6f8;   /* headings and body on dark */
+  --text-muted: #949ba4;     /* subtext, metadata, mono labels */
+}

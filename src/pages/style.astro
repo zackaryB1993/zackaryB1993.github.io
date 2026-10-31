@@ -1,0 +1,164 @@
+---
+// Phase 1 style test page. Not linked from the site; open /style during development.
+import Layout from '../layouts/Layout.astro';
+
+const chips = ['TypeScript', 'AWS Lambda', 'DynamoDB', 'HMAC webhooks', 'SES'];
+const more = [
+  { title: 'Bedrock form-building agents', body: 'Amazon Bedrock agents that automate form configuration.', tech: 'Bedrock · Lambda' },
+  { title: 'Platform integrations', body: 'Freshdesk, Zendesk, Salesforce, Outlook, Slack, Chrome, and a serverless email gateway.', tech: 'Node.js · Java' },
+  { title: 'Client SDKs', body: 'Maintained API SDKs in Java, Node.js, Python, and .NET.', tech: 'OSS · CodeArtifact' },
+  { title: 'Claude agent skills', body: 'Development workflow skills adopted across the engineering team.', tech: 'Claude Code · MCP' },
+  { title: 'AWS infrastructure', body: 'CloudFormation across ECS, Lambda, RDS, DynamoDB, S3, CloudFront, WAF.', tech: 'CloudFormation · IAM' },
+  { title: 'CI/CD', body: 'GitHub Actions with OIDC to CodeArtifact and AWS deploys.', tech: 'GitHub Actions' },
+];
+---
+
+<Layout title="Style test | Zackary Blaylock">
+  <!-- Nav -->
+  <header class="fixed inset-x-0 top-0 z-20">
+    <div class="mx-auto mt-4 flex max-w-6xl items-center justify-between px-6">
+      <a href="/" class="glass flex items-center gap-2 px-3 py-2 font-mono text-sm text-ink">
+        <span class="status-dot"></span> zb<span class="text-ink-muted">.dev</span>
+      </a>
+      <nav class="glass hidden gap-1 p-1 md:flex">
+        {['Work', 'About', 'Skills', 'Contact'].map((item) => (
+          <a href="#" class="rounded-lg px-3 py-1.5 text-sm text-ink-muted hover:bg-hover hover:text-ink">{item}</a>
+        ))}
+      </nav>
+      <a href="#" class="btn btn-primary text-sm">Resume</a>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-6xl px-6">
+    <!-- Hero -->
+    <section class="flex min-h-screen flex-col justify-center py-32">
+      <p class="mb-5 flex items-center gap-2 font-mono text-sm text-accent-glow">
+        <span class="status-dot"></span> available for senior and lead roles
+      </p>
+      <h1 class="display text-5xl font-bold leading-[1.05] md:text-7xl">
+        Zackary<br />Blaylock<span class="text-accent-glow text-glow">.</span>
+      </h1>
+      <p class="mt-6 max-w-2xl text-xl text-ink-muted">
+        Senior Lead Software Engineer. I build secure, cloud-native systems on AWS:
+        end-to-end encryption, OAuth 2.1, MCP, and serverless architecture.
+      </p>
+      <div class="mt-10 flex flex-wrap gap-3">
+        <a href="#" class="btn btn-primary">View work</a>
+        <a href="#" class="btn btn-ghost">Resume (PDF)</a>
+        <a href="#" class="btn btn-ghost">GitHub</a>
+      </div>
+      <p class="mt-16 font-mono text-sm text-ink-muted">
+        <span class="text-accent-glow">&gt;</span> encrypt --everything
+        <span class="animate-pulse">▍</span>
+      </p>
+    </section>
+
+    <!-- Featured case study card -->
+    <section class="py-20">
+      <p class="mb-3 font-mono text-sm text-ink-muted">01 / featured work</p>
+      <h2 class="display mb-10 text-4xl font-bold md:text-5xl">SendSafely Actions</h2>
+
+      <div class="glass edge-glow grid gap-10 p-8 md:grid-cols-2 md:p-12">
+        <div>
+          <p class="mb-4 flex items-center gap-2 font-mono text-xs text-accent-glow">
+            <span class="status-dot"></span> in production · US, EU, AU
+          </p>
+          <h3 class="display text-2xl font-semibold">A serverless workflow engine that lets customers plug in their own scanning</h3>
+          <p class="mt-4 text-ink-muted">
+            Event processing moved off the core web app onto AWS Lambda. Customers hook in DLP
+            and antivirus through signed webhooks; the engine pauses the run until they call back,
+            with org-wide and personal workflows executed in priority order.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-2">
+            {chips.map((c) => <span class="chip">{c}</span>)}
+          </div>
+          <a href="#" class="link mt-6 inline-block text-sm">Read the case study →</a>
+        </div>
+
+        <!-- Placeholder for the 3D scene. Shows the shape of the diagram until Three.js lands. -->
+        <div class="relative flex min-h-72 items-center justify-center rounded-xl bg-dock">
+          <svg viewBox="0 0 400 220" class="w-full max-w-sm" fill="none" stroke-width="1.5">
+            <defs>
+              <linearGradient id="g" x1="0" x2="1">
+                <stop offset="0" stop-color="var(--accent-glow)" />
+                <stop offset="1" stop-color="var(--accent-link)" />
+              </linearGradient>
+            </defs>
+            <path d="M40 110 H120 M180 110 H240 M300 110 H360" stroke="url(#g)" stroke-dasharray="6 6" />
+            <rect x="120" y="85" width="60" height="50" rx="10" stroke="var(--accent-glow)" />
+            <rect x="240" y="85" width="60" height="50" rx="10" stroke="var(--accent-link)" />
+            <circle cx="40" cy="110" r="10" fill="var(--accent-glow)" />
+            <circle cx="360" cy="110" r="10" stroke="var(--text-muted)" />
+            <text x="150" y="115" text-anchor="middle" fill="var(--text-heading)" font-size="11" font-family="JetBrains Mono Variable">engine</text>
+            <text x="270" y="115" text-anchor="middle" fill="var(--text-heading)" font-size="11" font-family="JetBrains Mono Variable">webhook</text>
+            <text x="270" y="165" text-anchor="middle" fill="var(--text-muted)" font-size="10" font-family="JetBrains Mono Variable">paused · awaiting callback</text>
+          </svg>
+          <span class="absolute right-3 top-3 font-mono text-[10px] text-ink-muted">3D scene goes here</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- More work grid -->
+    <section class="py-20">
+      <p class="mb-3 font-mono text-sm text-ink-muted">02 / more work</p>
+      <h2 class="display mb-10 text-4xl font-bold">Also shipped</h2>
+      <div class="grid gap-4 md:grid-cols-3">
+        {more.map((m) => (
+          <article class="glass p-6 transition-transform duration-200 hover:-translate-y-1">
+            <h3 class="display text-lg font-semibold">{m.title}</h3>
+            <p class="mt-2 text-sm text-ink-muted">{m.body}</p>
+            <p class="mt-4 font-mono text-xs text-accent-glow">{m.tech}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- Timeline + contact samples -->
+    <section class="grid gap-10 py-20 md:grid-cols-2">
+      <div>
+        <p class="mb-3 font-mono text-sm text-ink-muted">03 / experience</p>
+        <ol class="relative ml-3 border-l border-line pl-8">
+          {[
+            ['SendSafely', 'Senior Lead Software Engineer', '2020 – present', true],
+            ['Delta Air Lines', 'Full Stack Software Engineer', '2019 – 2020', false],
+            ['Cox Automotive', 'Frontend Software Developer', '2019', false],
+          ].map(([co, role, when, active]) => (
+            <li class="relative mb-8">
+              <span class={`absolute -left-[2.45rem] top-1.5 h-3 w-3 rounded-full ${active ? 'bg-accent-glow shadow-glow' : 'bg-hover'}`}></span>
+              <p class="font-mono text-xs text-ink-muted">{when}</p>
+              <p class="display text-lg font-semibold">{co}</p>
+              <p class="text-sm text-ink-muted">{role}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <div>
+        <p class="mb-3 font-mono text-sm text-ink-muted">04 / contact</p>
+        <div class="glass p-6 font-mono text-sm">
+          <p class="text-ink-muted">$ contact --email</p>
+          <p class="mt-2"><a href="#" class="link">zackoblaylock@gmail.com</a></p>
+          <p class="mt-1"><a href="#" class="link">linkedin.com/in/zackblaylock</a></p>
+          <p class="mt-1"><a href="#" class="link">github.com/zackaryB1993</a></p>
+          <p class="mt-4 text-accent-glow">✓ connected</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Token swatches -->
+    <section class="py-20">
+      <p class="mb-3 font-mono text-sm text-ink-muted">tokens</p>
+      <div class="grid grid-cols-3 gap-3 md:grid-cols-9">
+        {[
+          ['bg', 'var(--background)'], ['dock', 'var(--surface-dock)'], ['card', 'var(--surface-card)'],
+          ['hover', 'var(--surface-hover)'], ['accent', 'var(--accent-primary)'], ['glow', 'var(--accent-glow)'],
+          ['link', 'var(--accent-link)'], ['ink', 'var(--text-heading)'], ['muted', 'var(--text-muted)'],
+        ].map(([name, v]) => (
+          <div>
+            <div class="h-14 rounded-lg border border-line" style={`background:${v}`}></div>
+            <p class="mt-1 font-mono text-xs text-ink-muted">{name}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </main>
+</Layout>
