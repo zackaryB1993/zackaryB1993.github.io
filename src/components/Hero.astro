@@ -5,7 +5,8 @@ const [first, last] = person.name.split(' ');
 
 <section id="top" class="relative flex min-h-screen flex-col justify-center py-32">
   <!-- Hero particle network (src/scenes/hero.ts) mounts its canvas here. -->
-  <div class="hero-scene pointer-events-none absolute inset-0 -z-10" data-scene="hero" aria-hidden="true"></div>
+  <!-- Spans the full viewport width (not just the content column) so the network is never clipped. -->
+  <div class="hero-scene pointer-events-none absolute inset-y-0 left-1/2 -z-10 w-screen -translate-x-1/2" data-scene="hero" aria-hidden="true"></div>
 
   <p class="mb-5 flex items-center gap-2 font-mono text-sm text-accent-glow">
     <span class="status-dot"></span> {person.availability}

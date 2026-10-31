@@ -106,11 +106,19 @@ export function startHero(slot: HTMLElement, colors: ThemeColors) {
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
-    // Sit the network to the right of the headline on wide screens, centred and faint on narrow ones.
+    // Sit the network in the right part of the viewport on wide screens, centred and faint on
+    // narrow ones. Its centre and size come from the visible half-width so it always fits.
+    const halfH = camera.position.z * Math.tan((camera.fov * Math.PI) / 360);
+    const halfW = halfH * camera.aspect;
     const wide = width > 820;
-    group.position.x = wide ? 2.4 : 0;
-    group.position.y = wide ? 0.2 : 1.2;
-    group.scale.setScalar(wide ? 1 : 0.75);
+    if (wide) {
+      const x = halfW * 0.46;
+      group.position.set(x, 0.2, 0);
+      group.scale.setScalar(Math.min(1, (halfW - x) / (RADIUS * 1.25)));
+    } else {
+      group.position.set(0, 1.2, 0);
+      group.scale.setScalar(0.75);
+    }
     (points.material as PointsMaterial).opacity = wide ? 0.9 : 0.5;
     (lines.material as LineBasicMaterial).opacity = wide ? 0.28 : 0.16;
   };
