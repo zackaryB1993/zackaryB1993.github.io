@@ -4,8 +4,8 @@ const [first, last] = person.name.split(' ');
 ---
 
 <section id="top" class="relative flex min-h-screen flex-col justify-center py-32">
-  <!-- Hero 3D scene mounts here in Phase 3. -->
-  <div class="scene-slot pointer-events-none absolute inset-0 -z-10" data-scene="hero" aria-hidden="true"></div>
+  <!-- Hero particle network (src/scenes/hero.ts) mounts its canvas here. -->
+  <div class="hero-scene pointer-events-none absolute inset-0 -z-10" data-scene="hero" aria-hidden="true"></div>
 
   <p class="mb-5 flex items-center gap-2 font-mono text-sm text-accent-glow">
     <span class="status-dot"></span> {person.availability}

@@ -58,9 +58,8 @@ Single page with anchored sections, plus a small sticky nav that shows scroll pr
    - **SendSafely OAuth Authorization Server.** A key shape passes through gates:
      sign-in and consent → authorization code with PKCE → access token → token
      exchange → scoped API call.
-   - **Delta Payment Engine.** Card networks and wallets (Amex, Visa, Mastercard,
-     Discover, Diners Club, JCB, UnionPay, UATP, PayPal, Alipay, Apple Pay, bank
-     transfer) orbit one engine node; PSD2 and CID/CVV checks as gates.
+   - **Delta Payment Engine.** Card networks and wallets (PayPal, PayPal Credit, Alipay, Apple Pay,
+     Google Pay, bank transfer) orbit one engine node; PSD2 and CID/CVV checks as gates.
    - **Delta eCredits, Certificates & Gift Cards.** Booking → payment engine →
      eCredit / eCert / Gift Card redemption → fare, taxes, and fees. Links to the public
      Delta page.

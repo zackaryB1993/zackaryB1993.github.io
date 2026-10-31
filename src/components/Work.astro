@@ -1,11 +1,15 @@
 ---
 import { projects, moreWork } from '../data/resume';
 import SectionHeader from './SectionHeader.astro';
-import Diagram from './Diagram.astro';
+import FlowFigure from './FlowFigure.astro';
 ---
 
 <section id="work" class="scroll-mt-24 py-24">
   <SectionHeader index="02" label="featured work" title="Systems I designed and built" />
+  <p class="-mt-6 mb-10 max-w-2xl text-ink-muted">
+    Each case study has an interactive architecture diagram. Hover a node for what it does, click to pin it,
+    drag to rotate, and use the numbered steps to jump through the flow.
+  </p>
 
   <div class="grid gap-8">
     {projects.map((p, i) => (
@@ -42,7 +46,7 @@ import Diagram from './Diagram.astro';
           )}
         </div>
         <div class={i % 2 ? 'md:order-1' : ''}>
-          <Diagram project={p} />
+          <FlowFigure project={p} />
         </div>
       </article>
     ))}

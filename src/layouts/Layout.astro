@@ -26,6 +26,12 @@ const {
     <slot />
 
     <script>
+      // Hero decrypt effect, hero particle scene, and the case-study flow scenes.
+      import { boot } from '../scenes';
+      boot();
+    </script>
+
+    <script>
       // Cursor spotlight: track the pointer and expose it as CSS variables.
       // Throttled to one update per animation frame. Fades out when the cursor leaves.
       const layer = document.querySelector<HTMLElement>('.bg-spotlight');

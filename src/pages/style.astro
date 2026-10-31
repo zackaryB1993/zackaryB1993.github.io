@@ -1,6 +1,8 @@
 ---
 // Phase 1 style test page. Not linked from the site; open /style during development.
 import Layout from '../layouts/Layout.astro';
+import FlowFigure from '../components/FlowFigure.astro';
+import { projects } from '../data/resume';
 
 const chips = ['TypeScript', 'AWS Lambda', 'DynamoDB', 'HMAC webhooks', 'SES'];
 const more = [
@@ -141,6 +143,14 @@ const more = [
           <p class="mt-1"><a href="#" class="link">github.com/zackaryB1993</a></p>
           <p class="mt-4 text-accent-glow">✓ connected</p>
         </div>
+      </div>
+    </section>
+
+    <!-- Architecture flow (3D on desktop, SVG fallback elsewhere) -->
+    <section class="py-20">
+      <p class="mb-3 font-mono text-sm text-ink-muted">flow figure</p>
+      <div class="glass max-w-2xl p-8">
+        <FlowFigure project={projects[0]!} />
       </div>
     </section>
 

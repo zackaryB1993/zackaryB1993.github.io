@@ -28,3 +28,4 @@ pnpm-debug.log*
 
 # Separate git repo with its own remote
 zblaylock-portfolio/
+SendSafely_download_*/
