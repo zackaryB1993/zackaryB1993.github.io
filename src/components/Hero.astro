@@ -1,0 +1,30 @@
+---
+import { person } from '../data/resume';
+const [first, last] = person.name.split(' ');
+---
+
+<section id="top" class="relative flex min-h-screen flex-col justify-center py-32">
+  <!-- Hero 3D scene mounts here in Phase 3. -->
+  <div class="scene-slot pointer-events-none absolute inset-0 -z-10" data-scene="hero" aria-hidden="true"></div>
+
+  <p class="mb-5 flex items-center gap-2 font-mono text-sm text-accent-glow">
+    <span class="status-dot"></span> {person.availability}
+  </p>
+  <h1 class="display text-5xl font-bold leading-[1.05] md:text-7xl" aria-label={person.name}>
+    <span data-decrypt>{first}</span><br />
+    <span data-decrypt>{last}</span><span class="text-accent-glow text-glow">.</span>
+  </h1>
+  <p class="mt-6 max-w-2xl text-xl text-ink-muted">
+    {person.title}. {person.tagline}
+  </p>
+  <div class="mt-10 flex flex-wrap gap-3">
+    <a href="#work" class="btn btn-primary">View work</a>
+    <a href={person.links.resume} class="btn btn-ghost" download>Resume (PDF)</a>
+    <a href={person.links.github} class="btn btn-ghost" rel="me noopener" target="_blank">GitHub</a>
+    <a href={person.links.linkedin} class="btn btn-ghost" rel="me noopener" target="_blank">LinkedIn</a>
+  </div>
+  <p class="mt-16 font-mono text-sm text-ink-muted">
+    <span class="text-accent-glow">&gt;</span> encrypt --everything
+    <span class="animate-pulse" aria-hidden="true">▍</span>
+  </p>
+</section>

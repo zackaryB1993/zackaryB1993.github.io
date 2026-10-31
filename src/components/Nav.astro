@@ -1,0 +1,17 @@
+---
+import { nav, person } from '../data/resume';
+---
+
+<header class="fixed inset-x-0 top-0 z-20">
+  <div class="mx-auto mt-4 flex max-w-6xl items-center justify-between px-6">
+    <a href="#top" class="glass flex items-center gap-2 px-3 py-2 font-mono text-sm text-ink" aria-label="Back to top">
+      <span class="status-dot"></span> zb<span class="text-ink-muted">.dev</span>
+    </a>
+    <nav class="glass hidden gap-1 p-1 md:flex" aria-label="Sections">
+      {nav.map((item) => (
+        <a href={item.href} class="rounded-lg px-3 py-1.5 text-sm text-ink-muted hover:bg-hover hover:text-ink">{item.label}</a>
+      ))}
+    </nav>
+    <a href={person.links.resume} class="btn btn-primary text-sm" download>Resume</a>
+  </div>
+</header>

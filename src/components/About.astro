@@ -1,0 +1,21 @@
+---
+import { person, stats } from '../data/resume';
+import SectionHeader from './SectionHeader.astro';
+---
+
+<section id="about" class="scroll-mt-24 py-24">
+  <SectionHeader index="01" label="about" title="Security-minded, full stack, AWS-native" />
+  <div class="grid gap-10 md:grid-cols-5">
+    <p class="text-lg leading-relaxed text-ink-muted md:col-span-3">{person.summary}</p>
+    <dl class="grid grid-cols-2 gap-4 md:col-span-2">
+      {stats.map((s) => (
+        <div class="glass p-5">
+          <dd class="display text-4xl font-bold text-ink">
+            <span data-count={s.value}>{s.value}</span>{s.suffix}
+          </dd>
+          <dt class="mt-1 text-sm text-ink-muted">{s.label}</dt>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>

@@ -1,0 +1,18 @@
+---
+import { skills } from '../data/resume';
+import SectionHeader from './SectionHeader.astro';
+---
+
+<section id="skills" class="scroll-mt-24 py-24">
+  <SectionHeader index="06" label="skills" title="Toolbox" />
+  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    {skills.map((g) => (
+      <div class="glass p-5">
+        <h3 class="mb-3 font-mono text-xs uppercase tracking-wider text-accent-glow">{g.group}</h3>
+        <ul class="flex flex-wrap gap-2">
+          {g.items.map((s) => <li class="chip">{s}</li>)}
+        </ul>
+      </div>
+    ))}
+  </div>
+</section>

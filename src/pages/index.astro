@@ -1,23 +1,26 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Work from '../components/Work.astro';
+import Experience from '../components/Experience.astro';
+import Skills from '../components/Skills.astro';
+import Contact from '../components/Contact.astro';
+import { person } from '../data/resume';
 ---
 
-<Layout>
-  <main class="mx-auto flex min-h-screen max-w-3xl flex-col justify-center gap-4 px-6">
-    <p class="font-mono text-sm text-accent" data-reveal>// phase 0: scaffold check</p>
-    <h1 class="text-5xl font-bold tracking-tight" data-reveal>Zackary Blaylock</h1>
-    <p class="text-lg text-ink-muted" data-reveal>
-      Senior Lead Software Engineer. If this text fades in, Tailwind, the fonts, and GSAP are
-      all working.
-    </p>
+<Layout
+  title={`${person.name} | ${person.title}`}
+  description={`${person.title} building secure, cloud-native systems on AWS: end-to-end encryption, OAuth 2.1, MCP, and serverless architecture.`}
+>
+  <Nav />
+  <main class="mx-auto max-w-6xl px-6">
+    <Hero />
+    <About />
+    <Work />
+    <Experience />
+    <Skills />
+    <Contact />
   </main>
 </Layout>
-
-<script>
-  import { gsap } from 'gsap';
-
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!reduceMotion) {
-    gsap.from('[data-reveal]', { opacity: 0, y: 24, duration: 0.8, stagger: 0.15, ease: 'power3.out' });
-  }
-</script>

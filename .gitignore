@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # JetBrains project file
 *.iml
+
+# Separate git repo with its own remote
+zblaylock-portfolio/

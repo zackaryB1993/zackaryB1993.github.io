@@ -1,0 +1,29 @@
+---
+import { person } from '../data/resume';
+import SectionHeader from './SectionHeader.astro';
+const pretty = (url: string) => url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+---
+
+<section id="contact" class="scroll-mt-24 py-24">
+  <SectionHeader index="07" label="contact" title="Let's talk" />
+  <div class="grid gap-8 md:grid-cols-2">
+    <p class="text-lg text-ink-muted">
+      Open to senior and lead engineering roles, remote or in Atlanta. The fastest way to reach me is email.
+    </p>
+    <div class="glass p-6 font-mono text-sm" data-terminal>
+      <p class="text-ink-muted">$ contact --all</p>
+      <p class="mt-3"><a href={`mailto:${person.email}`} class="link">{person.email}</a></p>
+      <p class="mt-1"><a href={person.links.linkedin} class="link" target="_blank" rel="me noopener">{pretty(person.links.linkedin)}</a></p>
+      <p class="mt-1"><a href={person.links.github} class="link" target="_blank" rel="me noopener">{pretty(person.links.github)}</a></p>
+      <p class="mt-1 text-ink-muted">{person.location}</p>
+      <p class="mt-4 text-accent-glow">✓ connected</p>
+    </div>
+  </div>
+</section>
+
+<footer class="border-t border-line py-10 text-sm text-ink-muted">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <p>© {new Date().getFullYear()} {person.name}</p>
+    <p class="font-mono text-xs">Built with Astro, Tailwind, GSAP, and Three.js.</p>
+  </div>
+</footer>

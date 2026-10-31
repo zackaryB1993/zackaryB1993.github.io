@@ -3,7 +3,7 @@
 Personal portfolio for Zackary Blaylock, published with GitHub Pages at
 `https://zackaryb1993.github.io`. Content comes from "The One Resume" (Google Doc).
 
-Status: **Phase 0 done** (scaffold runs locally). Next: Phase 1, design system.
+Status: **Phases 0–2 done** (scaffold, design system, content and static sections). Next: Phase 3, hero decrypt effect and the shared Three.js renderer.
 
 ## Decisions so far
 
