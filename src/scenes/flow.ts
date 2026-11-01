@@ -538,7 +538,8 @@ export class FlowScene {
       row.sort((a, b) => a.pos[0] - b.pos[0]);
       row.forEach((node, i) => {
         const forcedBelow = node.kind === 'store' || node.pos[1] < -1.9;
-        this.labelBelow.set(node.id, forcedBelow || i % 2 === 1);
+        const below = node.labelSide ? node.labelSide === 'below' : forcedBelow || i % 2 === 1;
+        this.labelBelow.set(node.id, below);
       });
     }
   }

@@ -60,7 +60,7 @@ const strokeFor = (kind: string) =>
           <circle cx={p.x} cy={p.y} r={p.orbit ? 7 : 10} fill="var(--surface-card)" stroke={strokeFor(p.kind)} stroke-width="1.5" />
           <text
             x={p.x}
-            y={p.y + (p.orbit ? 16 : p.pos[1] < -1.5 ? 22 : -16)}
+            y={p.y + (p.orbit ? 16 : p.labelSide === 'below' || (p.labelSide !== 'above' && p.pos[1] < -1.5) ? 22 : -16)}
             text-anchor="middle"
             fill="var(--text-muted)"
             font-size={p.orbit ? 7.5 : 8.5}

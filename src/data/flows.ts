@@ -30,6 +30,8 @@ export type FlowNode = {
   pos: [number, number, number];
   /** Orbit nodes circle the node named here instead of sitting still. */
   orbits?: string;
+  /** Force the label side; otherwise nodes on a row alternate above/below left to right. */
+  labelSide?: 'above' | 'below';
 };
 
 export type FlowEdge = {
@@ -60,13 +62,13 @@ export type Flow = {
 export const flows: Record<string, Flow> = {
   actions: {
     summary:
-      'A platform event starts a workflow run. The engine runs native actions directly, or signs a webhook to the customer’s own scanner and pauses until it calls back, then records the result.',
+      'A platform event starts a workflow run. The usual workflow blocks the package, sends a signed webhook to the customer’s own scanner and pauses until it calls back, then unblocks the package if it was clean or holds or deletes it if it was flagged.',
     nodes: [
       {
         id: 'event',
         label: 'Platform event',
         kind: 'source',
-        pos: [-4.6, 0, 0],
+        pos: [-5.2, 0, 0],
         blurb:
           'A package is finalized, a file is uploaded to a Workspace, or a recipient is added. Each event starts a run. A synchronous pre-finalize hook can also deny an event before anything changes.',
       },
@@ -74,39 +76,39 @@ export const flows: Record<string, Flow> = {
         id: 'engine',
         label: 'Workflow engine',
         kind: 'service',
-        pos: [-2.5, 0, 0],
+        pos: [-3.4, 0, 0],
         blurb:
-          'TypeScript Lambdas load the org-wide and personal workflows that match the event, evaluate the event filters, write an execution plan, and run the steps in priority order. Filters on earlier step results give branching without a graph.',
+          'TypeScript Lambdas load the org-wide and personal workflows that match the event, evaluate the event filters, write an execution plan, and run the steps in order. Filters on earlier step results give branching without a graph.',
       },
       {
         id: 'state',
         label: 'Run state & logs',
         kind: 'store',
-        pos: [-2.5, -2.1, -0.4],
+        pos: [-3.4, -2.2, -0.4],
         blurb:
           'Every step writes its state to DynamoDB. A stream feeds a sync Lambda that keeps a DocumentDB execution log current for the customer-facing status page.',
       },
       {
-        id: 'native',
-        label: 'Native action',
+        id: 'block',
+        label: 'Block (native)',
         kind: 'service',
-        pos: [-0.4, 1.4, 0],
+        pos: [-1.7, 1.4, 0],
         blurb:
-          'Built-in steps (block, hold, release, or delete a file or package, or deny the event) run in-process against the platform REST API as the workflow’s identity user. The usual pattern is block, scan, then unblock if clean.',
+          'Step 1 of the usual workflow is a native BLOCK action: recipients cannot download the package or its files until the scan finishes. Native steps run in-process against the platform REST API as the workflow’s identity user.',
       },
       {
         id: 'webhook',
         label: 'Signed webhook',
         kind: 'gate',
-        pos: [-0.4, -1.2, 0],
+        pos: [-0.2, -1.2, 0],
         blurb:
-          'For customer-owned steps a dedicated Lambda fetches the per-action secret, signs the payload with HMAC-SHA256 and a timestamp, posts it to the customer’s endpoint, registers a one-time callback token, and halts the run.',
+          'Step 2 hands off to the customer: a dedicated Lambda fetches the per-action secret, signs the payload with HMAC-SHA256 and a timestamp, posts it to the customer’s endpoint, registers a one-time callback token, and halts the run.',
       },
       {
         id: 'scanner',
         label: 'Customer scanner',
         kind: 'external',
-        pos: [1.5, -1.2, 0],
+        pos: [1.3, -1.2, 0],
         blurb:
           'The customer’s own receiver (antivirus, DLP, archiving, or a reference receiver deployed into their own AWS or GCP account) verifies the signature, decrypts the package on their side, and inspects it. Content never goes through a third party.',
       },
@@ -114,39 +116,72 @@ export const flows: Record<string, Flow> = {
         id: 'callback',
         label: 'Callback',
         kind: 'gate',
-        pos: [3.2, -1.2, 0],
+        pos: [2.5, 0, 0],
+        labelSide: 'below',
         blurb:
-          'The receiver posts a TRUE, FALSE, or ERROR verdict with its callback token and the run resumes with freshly minted credentials. A cleanup Lambda runs every minute and times out tokens older than 15 minutes; failed or timed-out runs can be replayed.',
+          'The receiver posts TRUE (clean), FALSE (flagged), or ERROR with its callback token, and the run resumes with freshly minted credentials. A cleanup Lambda runs every minute and times out tokens older than 15 minutes; failed or timed-out runs can be replayed.',
+      },
+      {
+        id: 'unblock',
+        label: 'Unblock (native)',
+        kind: 'service',
+        pos: [3.9, 1.4, 0],
+        labelSide: 'above',
+        blurb:
+          'Step 3 is a native UNBLOCK action with a filter: it only runs if the webhook step returned TRUE. Filters on earlier step results are how a workflow branches, so recipients only ever see content that passed the scan.',
+      },
+      {
+        id: 'flag',
+        label: 'Hold or delete',
+        kind: 'service',
+        pos: [3.9, -1.3, 0],
+        labelSide: 'below',
+        blurb:
+          'If the webhook step returned FALSE, an optional step holds or deletes the content instead. A HOLD keeps the package from being deleted or forwarded until an admin reviews it.',
       },
       {
         id: 'result',
         label: 'Result',
         kind: 'sink',
-        pos: [4.8, 0.2, 0],
+        pos: [5.4, 0, 0],
+        labelSide: 'above',
         blurb:
-          'Later steps release, delete, or keep holding the content based on the verdict, SES emails the workflow’s notification address, and CloudWatch alarms watch every Lambda. Live in US, EU, and AU regions.',
+          'SES emails the workflow’s notification address, the execution log shows every step’s result, and CloudWatch alarms watch each Lambda. Live in US, EU, and AU regions.',
       },
     ],
     edges: [
       { from: 'event', to: 'engine' },
       { from: 'engine', to: 'state', dashed: true },
-      { from: 'engine', to: 'native' },
-      { from: 'native', to: 'result' },
-      { from: 'engine', to: 'webhook' },
+      { from: 'engine', to: 'block' },
+      { from: 'block', to: 'webhook' },
       { from: 'webhook', to: 'scanner' },
       { from: 'scanner', to: 'callback' },
-      { from: 'callback', to: 'result' },
+      { from: 'callback', to: 'unblock' },
+      { from: 'callback', to: 'flag' },
+      { from: 'unblock', to: 'result' },
+      { from: 'flag', to: 'result' },
     ],
     routes: [
       [
         { id: 'event' },
         { id: 'engine' },
-        { id: 'webhook', wait: 1.6, waitLabel: 'run paused, waiting for the customer' },
+        { id: 'block' },
+        { id: 'webhook', wait: 1.6, waitLabel: 'run paused, waiting for the customer’s scanner' },
         { id: 'scanner' },
-        { id: 'callback' },
+        { id: 'callback', wait: 0.5, waitLabel: 'verdict: clean' },
+        { id: 'unblock' },
         { id: 'result' },
       ],
-      [{ id: 'event' }, { id: 'engine' }, { id: 'native' }, { id: 'result' }],
+      [
+        { id: 'event' },
+        { id: 'engine' },
+        { id: 'block' },
+        { id: 'webhook', wait: 1.6 },
+        { id: 'scanner' },
+        { id: 'callback', wait: 0.5 },
+        { id: 'flag' },
+        { id: 'result' },
+      ],
     ],
   },
 

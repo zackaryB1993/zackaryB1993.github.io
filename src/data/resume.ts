@@ -57,7 +57,7 @@ export const projects: Project[] = [
       'Multi-tenant workflow automation for an E2EE file-sharing platform. TypeScript Lambdas build an execution plan for each event (package finalized, workspace file uploaded, recipient added), run native actions through the platform REST API, and pause on HMAC-signed webhooks to customer services (antivirus, DLP, archiving) until they call back, with an EventBridge-scheduled cleanup for 15-minute timeouts, replay of failed runs, and rate-limited SES notifications. A synchronous pre-finalize hook lets a workflow deny an event outright. Configuration is stored in MySQL (Hibernate), and execution state in DynamoDB, streamed to DocumentDB for customer-facing logs. Deployed with AWS SAM and CodeBuild, with CloudWatch alarms to SNS. Also built the proof-of-concept OPSWAT antivirus webhook receiver.',
     tech: ['TypeScript', 'Java', 'AWS Lambda', 'DynamoDB Streams', 'DocumentDB', 'MySQL', 'HMAC webhooks', 'EventBridge', 'SES', 'AWS SAM'],
     diagram:
-      'Platform event → workflow engine → native action or signed webhook → customer scanner → callback → result. The webhook step pauses the run until the callback arrives.',
+      'Platform event → workflow engine → block (native) → signed webhook → customer scanner → callback → unblock if clean, hold or delete if flagged → result. The webhook step pauses the run until the callback arrives.',
   },
   {
     slug: 'mcp',
