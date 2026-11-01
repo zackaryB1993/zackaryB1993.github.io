@@ -91,15 +91,15 @@ export const projects: Project[] = [
     slug: 'form-builder',
     name: 'SendSafely Custom Form Builder',
     org: 'SendSafely',
-    status: 'in production · AgentCore engine rolling out',
+    status: 'in production on Bedrock AgentCore',
     headline: 'Describe a secure intake form in chat and get a hosted, working page',
     body:
-      'Designed and deployed an AI assistant that turns a chat description into a hosted Dropzone intake form. Built on Amazon Bedrock Agents and now moving to Bedrock AgentCore with Claude Sonnet 4.5, a Bedrock Knowledge Base on S3 Vectors, and an MCP gateway.',
+      'Designed and deployed an AI assistant that turns a chat description into a hosted Dropzone intake form. Users describe the inputs, validation, and submit button on the web portal; a Bedrock AgentCore harness running Claude Sonnet 4.5 generates and QA-checks the form; the user previews and tests it, then saves it to S3. Migrated from Bedrock Agents to AgentCore.',
     detail:
-      'A Java SSE streaming servlet drives a Bedrock agent (Bedrock Agents in production; a Bedrock AgentCore harness with Claude Sonnet 4.5, session Memory, and an MCP gateway to a Knowledge Base on S3 Vectors with Titan v2 embeddings) that writes a self-contained HTML form, publishes a preview to S3, and serves it with a nonce-based CSP and server-side placeholder substitution so generated pages never contain real IDs. Release-pinned agent endpoints let each app release ship its own prompt and knowledge base, deployed by a scripted CloudFormation pipeline with least-privilege IAM per resource.',
-    tech: ['Amazon Bedrock', 'Bedrock AgentCore', 'Claude Sonnet 4.5', 'Knowledge Bases', 'S3 Vectors', 'MCP', 'Java', 'SSE', 'Angular', 'CloudFormation'],
+      'A Java SSE streaming servlet drives a Bedrock AgentCore harness (Claude Sonnet 4.5, with AgentCore Memory for the session and an AgentCore Gateway to a Knowledge Base on S3 Vectors with Titan v2 embeddings) that writes a self-contained HTML form, publishes a preview to S3, and serves it with a nonce-based CSP and server-side placeholder substitution so generated pages never contain real IDs. Release-pinned harness endpoints let each app release ship its own prompt and knowledge base, deployed by a scripted CloudFormation pipeline with least-privilege IAM per resource.',
+    tech: ['Bedrock AgentCore', 'Claude Sonnet 4.5', 'AgentCore Memory', 'AgentCore Gateway', 'Knowledge Bases', 'S3 Vectors', 'Java', 'SSE', 'Angular', 'CloudFormation'],
     diagram:
-      'Chat → streaming servlet → Bedrock agent (Knowledge Base lookup) → generated HTML → S3 preview → served form with CSP → saved form.',
+      'Web portal session → AgentCore harness (Memory, Gateway to Knowledge Base) → QA check → preview and test on the portal → refine in chat or save to S3.',
   },
   {
     slug: 'delta-payments',
