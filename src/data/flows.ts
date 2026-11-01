@@ -329,9 +329,9 @@ export const flows: Record<string, Flow> = {
         id: 'store',
         label: 'Aurora MySQL',
         kind: 'store',
-        pos: [2.7, -2.3, -0.4],
+        pos: [-1.2, -2.6, -0.6],
         blurb:
-          'Aurora MySQL through Drizzle ORM. Every token and code is stored as a SHA-256 hash and client secrets as scrypt hashes. Introspection and revocation read from here, and an outbox streams audit events back to the platform.',
+          'Aurora MySQL through Drizzle ORM, the single source of truth for consent records, authorization codes, access and refresh tokens, and registered clients. Every token and code is stored as a SHA-256 hash and client secrets as scrypt hashes. Introspection and revocation read from here, and an outbox streams audit events back to the platform.',
       },
       {
         id: 'exchange',
@@ -355,6 +355,9 @@ export const flows: Record<string, Flow> = {
       { from: 'signin', to: 'code' },
       { from: 'code', to: 'token' },
       { from: 'token', to: 'refresh' },
+      { from: 'signin', to: 'store', dashed: true },
+      { from: 'code', to: 'store', dashed: true },
+      { from: 'token', to: 'store', dashed: true },
       { from: 'refresh', to: 'store', dashed: true },
       { from: 'token', to: 'exchange' },
       { from: 'exchange', to: 'api' },
