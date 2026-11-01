@@ -66,12 +66,12 @@ export const projects: Project[] = [
     status: 'live for customers',
     headline: 'Lets AI assistants such as Claude manage encrypted files without ever seeing the keys',
     body:
-      'Initiated and built the MCP integration. AI assistants can list, inspect, and manage encrypted packages and workspaces through a local server (36 tools) that handles encryption on the user’s machine and asks for approval before destructive actions, or a stateless remote connector (21 tools) on AWS Lambda that only sees metadata.',
+      'Initiated and built the MCP integration. AI assistants can list, inspect, and manage encrypted packages and workspaces through a local server (36 tools) that handles encryption on the user’s machine, or a stateless remote connector (21 tools) on AWS Lambda that only sees metadata. Both use MCP elicitation to ask for approval before destructive actions.',
     detail:
       'TypeScript MCP server (npm workspaces monorepo) shipped two ways: a published local stdio package with OS-keychain credentials, Trusted Device keys, client-side encryption, MCP elicitation for approvals, and sandboxed downloads; and a stateless Streamable HTTP connector on Lambda behind CloudFront, WAF, and API Gateway that serves RFC 9728 protected-resource metadata, rate-limits per token, and exchanges the user’s OAuth token for a tenant-scoped token on every call. Packages are published through GitHub Actions with OIDC to CodeArtifact, and the same tested tarball is promoted to production.',
     tech: ['TypeScript', 'MCP', 'Streamable HTTP', 'AWS Lambda', 'CloudFront', 'WAF', 'API Gateway', 'OAuth 2.1', 'Token Exchange', 'CodeArtifact', 'Vitest'],
     diagram:
-      'AI assistant → local server (encryption on the user’s machine) or remote connector (metadata only) → platform API.',
+      'AI assistant → local server (encryption on the user’s machine) or remote connector (metadata only) → elicitation prompt before destructive actions → platform API.',
   },
   {
     slug: 'oauth',

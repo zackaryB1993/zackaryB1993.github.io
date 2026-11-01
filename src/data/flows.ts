@@ -187,13 +187,13 @@ export const flows: Record<string, Flow> = {
 
   mcp: {
     summary:
-      'An AI assistant reaches the platform API two ways: a local server that encrypts on the user’s machine and asks before destructive actions, or a remote connector that only sees metadata and exchanges tokens on every call.',
+      'An AI assistant reaches the platform API two ways: a local server that encrypts on the user’s machine, or a remote connector that only sees metadata and exchanges tokens on every call. Both pause for an elicitation prompt before any destructive action.',
     nodes: [
       {
         id: 'assistant',
         label: 'AI assistant',
         kind: 'source',
-        pos: [-4.6, 0, 0],
+        pos: [-5.2, 0, 0],
         blurb:
           'claude.ai, Claude Desktop, Claude Code, or another MCP client asks in plain language to list, inspect, or manage encrypted packages and workspaces.',
       },
@@ -201,31 +201,39 @@ export const flows: Record<string, Flow> = {
         id: 'local',
         label: 'Local server',
         kind: 'service',
-        pos: [-1.9, 1.4, 0],
+        pos: [-2.8, 1.4, 0],
         blurb:
           'A published stdio package with 36 tools that runs on the user’s machine. API credentials live in the OS keychain, files are encrypted and decrypted locally by the official SDK, and downloads land in a sandboxed directory with size caps.',
       },
       {
-        id: 'approval',
-        label: 'Approval prompt',
+        id: 'elicit-local',
+        label: 'Elicitation',
         kind: 'gate',
-        pos: [0.7, 1.4, 0],
+        pos: [-0.6, 1.4, 0],
         blurb:
-          'Destructive or sensitive tools (deletes, decrypt-to-disk, uploads, Trusted Device keys) use MCP elicitation to show an approve or decline prompt in the client before anything happens.',
+          'Before a destructive or sensitive tool runs (deletes, decrypt-to-disk, uploads, Trusted Device keys), the server uses MCP elicitation to show an approve-or-decline prompt in the client. Nothing happens until the user answers.',
       },
       {
         id: 'remote',
         label: 'Remote connector',
         kind: 'service',
-        pos: [-1.9, -1.4, 0],
+        pos: [-2.8, -1.4, 0],
         blurb:
           'A stateless Streamable HTTP server on AWS Lambda behind CloudFront, WAF, and API Gateway with 21 metadata and management tools. Every request is gated on origin, bearer format, and a per-token rate limit, and the connector never holds a keycode.',
+      },
+      {
+        id: 'elicit-remote',
+        label: 'Elicitation',
+        kind: 'gate',
+        pos: [-0.6, -1.4, 0],
+        blurb:
+          'The remote connector has the same gate: a destructive tool call pauses on an MCP elicitation prompt and the client asks the user to approve before the connector goes any further.',
       },
       {
         id: 'exchange',
         label: 'Token exchange',
         kind: 'gate',
-        pos: [0.7, -1.4, 0],
+        pos: [1.7, -1.4, 0],
         blurb:
           'On every call the connector exchanges the user’s OAuth token (RFC 8693) for one scoped to that tenant’s API, so the inbound token is never forwarded and each request carries exactly the access it needs.',
       },
@@ -233,7 +241,7 @@ export const flows: Record<string, Flow> = {
         id: 'api',
         label: 'Platform API',
         kind: 'sink',
-        pos: [3.6, 0, 0],
+        pos: [4.2, 0, 0],
         blurb:
           'The SendSafely REST API serves both paths. A bearer-token filter validates the JWT against JWKS, checks revocation, and enforces the scope each endpoint declares. File contents and keys never leave the client.',
       },
@@ -241,17 +249,18 @@ export const flows: Record<string, Flow> = {
         id: 'publish',
         label: 'Published packages',
         kind: 'store',
-        pos: [-1.9, -3.2, -0.4],
+        pos: [-2.8, -3.2, -0.4],
         blurb:
           'Packages are published through GitHub Actions with OIDC to CodeArtifact: betas on every merge, releases by tag, and the same tested tarball promoted to production.',
       },
     ],
     edges: [
       { from: 'assistant', to: 'local' },
-      { from: 'local', to: 'approval' },
-      { from: 'approval', to: 'api' },
+      { from: 'local', to: 'elicit-local' },
+      { from: 'elicit-local', to: 'api' },
       { from: 'assistant', to: 'remote' },
-      { from: 'remote', to: 'exchange' },
+      { from: 'remote', to: 'elicit-remote' },
+      { from: 'elicit-remote', to: 'exchange' },
       { from: 'exchange', to: 'api' },
       { from: 'remote', to: 'publish', dashed: true },
     ],
@@ -259,10 +268,16 @@ export const flows: Record<string, Flow> = {
       [
         { id: 'assistant' },
         { id: 'local' },
-        { id: 'approval', wait: 1.2, waitLabel: 'waiting for the user to approve' },
+        { id: 'elicit-local', wait: 1.3, waitLabel: 'waiting for the user to approve' },
         { id: 'api' },
       ],
-      [{ id: 'assistant' }, { id: 'remote' }, { id: 'exchange' }, { id: 'api' }],
+      [
+        { id: 'assistant' },
+        { id: 'remote' },
+        { id: 'elicit-remote', wait: 1.3, waitLabel: 'waiting for the user to approve' },
+        { id: 'exchange' },
+        { id: 'api' },
+      ],
     ],
   },
 
