@@ -283,13 +283,13 @@ export const flows: Record<string, Flow> = {
 
   oauth: {
     summary:
-      'A client sends the user to sign in and consent, receives a PKCE-bound authorization code, redeems it for a KMS-signed token, optionally exchanges it for a narrower one, and calls the API where every endpoint checks scopes.',
+      'A client sends the user to sign in and consent, receives a PKCE-bound authorization code, redeems it for a KMS-signed access token and a refresh token, rotates the refresh token when the access token expires, optionally exchanges a token for a narrower one, and calls the API where every endpoint checks scopes.',
     nodes: [
       {
         id: 'client',
         label: 'Client app',
         kind: 'source',
-        pos: [-5, 0, 0],
+        pos: [-5.2, 0, 0],
         blurb:
           'An MCP client or partner application that needs to call the SendSafely API on a user’s behalf. Clients are registered with exact redirect URIs, and public clients must use PKCE.',
       },
@@ -297,7 +297,7 @@ export const flows: Record<string, Flow> = {
         id: 'signin',
         label: 'Sign-in & consent',
         kind: 'gate',
-        pos: [-3, 1, 0],
+        pos: [-3.4, 1.3, 0],
         blurb:
           'The authorization server never sees a password. The user picks their portal, signs in to the main application, and returns with a KMS-signed, single-use handover token bound to a nonce, then approves the requested scopes on an Angular consent screen.',
       },
@@ -305,7 +305,7 @@ export const flows: Record<string, Flow> = {
         id: 'code',
         label: 'Auth code + PKCE',
         kind: 'gate',
-        pos: [-1, -1, 0],
+        pos: [-1.7, -1.2, 0],
         blurb:
           'The server issues a one-time authorization code bound to the client’s PKCE challenge (S256) and the requested resource, so an intercepted code is useless on its own.',
       },
@@ -313,15 +313,23 @@ export const flows: Record<string, Flow> = {
         id: 'token',
         label: 'Access token',
         kind: 'service',
-        pos: [1, 1, 0],
+        pos: [0.1, 1.3, 0],
         blurb:
-          'The code is redeemed for a short-lived RFC 9068 JWT signed with KMS RSA keys, plus a rotating refresh token. Reusing a rotated refresh token revokes the whole family and raises an alert.',
+          'The code is redeemed for a short-lived RFC 9068 JWT signed with KMS RSA keys, plus a refresh token the client uses to come back for the next one without sending the user through sign-in again.',
+      },
+      {
+        id: 'refresh',
+        label: 'Refresh token',
+        kind: 'gate',
+        pos: [0.1, -1.2, 0],
+        blurb:
+          'When the access token expires the client presents its refresh token and gets a new pair. Every refresh rotates the token, and reusing a rotated one revokes the whole family and raises an alert, so a stolen refresh token burns itself.',
       },
       {
         id: 'store',
         label: 'Aurora MySQL',
         kind: 'store',
-        pos: [1, -1.6, -0.4],
+        pos: [2.7, -2.3, -0.4],
         blurb:
           'Aurora MySQL through Drizzle ORM. Every token and code is stored as a SHA-256 hash and client secrets as scrypt hashes. Introspection and revocation read from here, and an outbox streams audit events back to the platform.',
       },
@@ -329,7 +337,7 @@ export const flows: Record<string, Flow> = {
         id: 'exchange',
         label: 'Token exchange',
         kind: 'gate',
-        pos: [3, -1, 0],
+        pos: [2.3, 1.3, 0],
         blurb:
           'Confidential services can swap a token for a narrower, tenant-scoped one (RFC 8693). The exchanged token lives in the same grant, so revoking the family kills it too.',
       },
@@ -337,7 +345,7 @@ export const flows: Record<string, Flow> = {
         id: 'api',
         label: 'Scoped API call',
         kind: 'sink',
-        pos: [5, 0, 0],
+        pos: [4.8, 0, 0],
         blurb:
           'Java servlet filters validate the bearer JWT against JWKS, check a revocation cache and fall back to introspection (failing closed if the server is unreachable), and enforce the scope every endpoint declares.',
       },
@@ -346,7 +354,8 @@ export const flows: Record<string, Flow> = {
       { from: 'client', to: 'signin' },
       { from: 'signin', to: 'code' },
       { from: 'code', to: 'token' },
-      { from: 'token', to: 'store', dashed: true },
+      { from: 'token', to: 'refresh' },
+      { from: 'refresh', to: 'store', dashed: true },
       { from: 'token', to: 'exchange' },
       { from: 'exchange', to: 'api' },
     ],
@@ -355,6 +364,13 @@ export const flows: Record<string, Flow> = {
         { id: 'client' },
         { id: 'signin', wait: 1, waitLabel: 'user signs in and approves scopes' },
         { id: 'code' },
+        { id: 'token' },
+        { id: 'exchange' },
+        { id: 'api' },
+      ],
+      [
+        { id: 'token', wait: 0.6, waitLabel: 'access token expired' },
+        { id: 'refresh', wait: 0.9, waitLabel: 'rotating the refresh token' },
         { id: 'token' },
         { id: 'exchange' },
         { id: 'api' },

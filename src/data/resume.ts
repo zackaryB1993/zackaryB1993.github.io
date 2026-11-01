@@ -85,7 +85,7 @@ export const projects: Project[] = [
       'OAuth 2.1 microservice (Koa on Lambda behind CloudFront, Aurora MySQL with Drizzle ORM, Angular sign-in and consent app) supporting PKCE, resource indicators, token exchange, introspection, and revocation. Users sign in through the main application via a KMS-signed, single-use handover; tokens and client secrets are hashed at rest; refresh tokens rotate with family revocation and alerts on reuse; and Java servlet filters validate bearer JWTs against JWKS, check revocation through a cached introspection client that fails closed, and enforce scopes on every API endpoint. Audit events flow back to the platform through a retried outbox. Blue/green Lambda alias deploys.',
     tech: ['OAuth 2.1', 'PKCE', 'Token Exchange', 'JWT (RFC 9068)', 'JWKS', 'KMS', 'Koa', 'Aurora MySQL', 'Drizzle ORM', 'Angular', 'Java'],
     diagram:
-      'Sign-in and consent → authorization code with PKCE → access token → token exchange → scoped API call.',
+      'Sign-in and consent → authorization code with PKCE → access token plus refresh token (rotated on every use) → token exchange → scoped API call.',
   },
   {
     slug: 'form-builder',
