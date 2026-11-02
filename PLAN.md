@@ -3,9 +3,9 @@
 Personal portfolio for Zackary Blaylock, published with GitHub Pages at
 `https://zackaryb1993.github.io`. Content comes from "The One Resume" (Google Doc).
 
-Status: **Phases 0–4 done** (scaffold, design system, content, hero decrypt + particle
-network, seven interactive 3D flow scenes with legends and fallbacks). Next: Phase 5,
-timeline, skills, and contact animations.
+Status: **Phases 0–4 and 7 done.** Live at https://zackaryb1993.github.io/ (repo
+`zackaryB1993/zackaryB1993.github.io`, public, deployed by `.github/workflows/deploy.yml`
+on every push to `main`). Next: Phase 5, timeline, skills, and contact animations.
 
 Flow scenes: `src/data/flows.ts` holds the nodes, edges, routes, and hover blurbs for every
 case study; `src/scenes/` holds the shared Three.js stage (`stage.ts`), the scene class
@@ -142,8 +142,8 @@ Each phase ends with something you can look at before the next one starts.
 
 - This folder sits inside `~/Documents/code`, which is itself a git repo. The portfolio
   gets its own repo here; the parent should ignore it.
-- The GitHub CLI is currently signed in as `zblaylockTackon`. Before Phase 7, sign in to
-  `zackaryB1993` (`gh auth login`) or add it as a second account (`gh auth switch`).
+- The GitHub CLI has both accounts; `zackaryB1993` is active for this repo
+  (`gh auth switch --user zackaryB1993` if it ever flips back).
 - Local folder name can stay `zblaylock-portfolio`; the GitHub repo must be named
   `zackaryB1993.github.io` for the root URL to work.
 
