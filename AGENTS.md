@@ -11,8 +11,8 @@ decisions.
 - **Public-level detail only:** no internal SendSafely or Delta names, hostnames, limits,
   or known weaknesses. Real numbers only.
 - **Privacy:** never publish the phone number or street address.
-- **PQVault:** always labeled "personal side project, in development". Repo is private;
-  link the Z&K Tech site instead.
+- **PQVault:** always labeled "personal side project, in development". Repo is private and
+  the marketing site is not public yet, so no external link.
 - **Motion:** every animation must respect `prefers-reduced-motion` and leave the real
   text in the DOM.
 - **Theme:** `src/styles/theme.css` is the only file with color values (nine keys:

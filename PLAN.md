@@ -25,13 +25,13 @@ are read from the theme CSS variables at runtime.
 | Resume PDF | Yes, downloadable. Use a copy without the phone number. |
 | Headshot | Yes. Zack will provide it later; use a styled placeholder until then. |
 | PQVault status | Not live. Label it "personal side project, in development" everywhere. |
-| PQVault link | Repo is private, so no code link. Link the Z&K Tech marketing site (`https://stage.zak-tech.us/`) for context, and switch to the production `zak-tech.us` URL once it is live. |
+| PQVault link | Repo is private, so no code link and no external link yet. The marketing site is not public; add a link once it is. |
 
 ## Stack
 
 | Piece | Choice | Why |
 |---|---|---|
-| Framework | [Astro](https://astro.build) + TypeScript | Static output for GitHub Pages, near-zero JS by default, already used on the Z&K Tech site |
+| Framework | [Astro](https://astro.build) + TypeScript | Static output for GitHub Pages, near-zero JS by default, already used on another of Zack's projects |
 | Styling | Tailwind CSS v4 | Fast to iterate, design tokens in CSS |
 | Animation | GSAP (ScrollTrigger, SplitText, DrawSVG, MotionPath) | Free for commercial use, handles scroll-pinned and SVG path animation well |
 | 3D | Three.js (vanilla module, no React) | One shared renderer; ~150 KB gzipped loaded once; scenes are small hand-written modules under `src/scenes/` |

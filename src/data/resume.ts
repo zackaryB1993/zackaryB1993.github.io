@@ -141,9 +141,8 @@ export const projects: Project[] = [
     body:
       'Personal side project, in development. Desktop (Rust, Tauri), browser extension, web, and mobile (React Native, Expo) clients built on a shared React/TypeScript UI library, with a Rust (Axum) API on PostgreSQL and AWS infrastructure defined in CloudFormation.',
     detail:
-      'Uses ML-KEM-768 for device keys and native biometric unlock (Touch ID, Windows Hello). The repository is private; the Z&K Tech marketing site has more context.',
+      'Uses ML-KEM-768 for device keys and native biometric unlock (Touch ID, Windows Hello). The repository is private while the project is in development.',
     tech: ['Rust', 'Tauri', 'Axum', 'React', 'TypeScript', 'React Native', 'Expo', 'PostgreSQL', 'ML-KEM-768', 'CloudFormation'],
-    link: { label: 'Z&K Tech', href: 'https://stage.zak-tech.us/' },
     diagram: 'Desktop, extension, web, and mobile clients → shared UI library → Rust API, with an ML-KEM key badge.',
     personal: true,
   },
